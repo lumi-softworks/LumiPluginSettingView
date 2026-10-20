@@ -190,11 +190,14 @@ private enum CurrentAppIcon {
 ///
 /// 设置入口仍来自 `SettingViewProviding`，这里只负责 iOS 的呈现方式；
 /// 具体设置内容继续由各自插件通过 `SettingEntryItem` 提供。
+///
+/// 根页遵循 iOS Settings 范式：分组 inset 列表 + 导航栏搜索 + 纯文字行（不画前置图标）。
 private struct MobilePluginSettingsShell<Provider: SettingViewProviding & ObservableObject>: View {
     @ObservedObject var provider: Provider
     @Environment(\.dismiss) private var dismiss
     @Environment(\.horizontalSizeClass) private var horizontalSizeClass
-    @State private var path: [String] = []
+    @State private var path: [SettingEntryRoute] = []
+    @State private var searchText = ""
 
     init(provider: Provider) {
         self.provider = provider
@@ -218,22 +221,29 @@ private struct MobilePluginSettingsShell<Provider: SettingViewProviding & Observ
                     appIdentityHeader
                 }
 
-                Section(LumiPluginLocalization.string("Settings", bundle: .module)) {
-                    ForEach(provider.entries) { entry in
-                        NavigationLink(value: entry.id) {
-                            Label(entry.title, systemImage: entry.systemImage)
+                ForEach(cards) { card in
+                    if let title = card.title {
+                        Section {
+                            entryRows(card.entries)
+                        } header: {
+                            Text(title)
                         }
-                        .accessibilityIdentifier("kuzee.settings.entry.\(entry.id)")
+                    } else {
+                        Section {
+                            entryRows(card.entries)
+                        }
                     }
                 }
             }
             .listStyle(.insetGrouped)
             .navigationTitle(LumiPluginLocalization.string("Settings", bundle: .module))
-            .navigationDestination(for: String.self) { entryID in
-                detailView(for: entryID)
+            .navigationBarTitleDisplayMode(.inline)
+            .searchable(text: $searchText, prompt: LumiPluginLocalization.string("Search", bundle: .module))
+            .navigationDestination(for: SettingEntryRoute.self) { route in
+                detailView(for: route.entryID)
             }
             .onChange(of: path) { _, newPath in
-                provider.selectEntry(id: newPath.last)
+                provider.selectEntry(id: newPath.last?.entryID)
             }
             .toolbar { doneButton }
         }
@@ -246,10 +256,16 @@ private struct MobilePluginSettingsShell<Provider: SettingViewProviding & Observ
                     appIdentityHeader
                 }
 
-                Section(LumiPluginLocalization.string("Settings", bundle: .module)) {
-                    ForEach(provider.entries) { entry in
-                        NavigationLink(value: entry.id) {
-                            Label(entry.title, systemImage: entry.systemImage)
+                ForEach(cards) { card in
+                    if let title = card.title {
+                        Section {
+                            entryRows(card.entries)
+                        } header: {
+                            Text(title)
+                        }
+                    } else {
+                        Section {
+                            entryRows(card.entries)
                         }
                     }
                 }
@@ -265,6 +281,21 @@ private struct MobilePluginSettingsShell<Provider: SettingViewProviding & Observ
         }
         .navigationSplitViewStyle(.balanced)
         .toolbar { doneButton }
+    }
+
+    @ViewBuilder
+    private func entryRows(_ entries: [SettingEntryItem]) -> some View {
+        ForEach(entries) { entry in
+            NavigationLink(value: SettingEntryRoute(entryID: entry.id)) {
+                Text(entry.title)
+            }
+            .accessibilityIdentifier("kuzee.settings.entry.\(entry.id)")
+        }
+    }
+
+    /// 过滤后的入口分组（已把连续的无标题分组合并成一张卡片）。
+    private var cards: [SettingEntryGrouping.Card] {
+        SettingEntryGrouping.cards(from: provider.entries, keyword: searchText)
     }
 
     private var appIdentityHeader: some View {
