@@ -13,10 +13,10 @@ PluginSettingView is the settings view plugin: it renders the settings page shel
 
 ## Dependencies
 
-- [LumiKernel](https://github.com/CofficLab/LumiKernel) — `KernelCore`
-- [LumiLocalization](https://github.com/CofficLab/LumiLocalization) — `LumiLocalizationKit` runtime localization
-- [LumiSettings](https://github.com/CofficLab/LumiSettings) — `ProviderSettingView`
-- [LumiUI](https://github.com/CofficLab/LumiUI) — settings page components
+- [LumiKernel](https://github.com/lumi-softworks/LumiKernel) — `KernelCore`
+- [LumiLocalization](https://github.com/lumi-softworks/LumiLocalization) — `LumiLocalizationKit` runtime localization
+- [LumiSettings](https://github.com/lumi-softworks/LumiSettings) — `ProviderSettingView`
+- [LumiUI](https://github.com/lumi-softworks/LumiUI) — settings page components
 
 ## Usage
 

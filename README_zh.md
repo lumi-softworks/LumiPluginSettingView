@@ -13,10 +13,10 @@ PluginSettingView 是设置视图插件：负责设置页面的外壳与侧边�
 
 ## 依赖
 
-- [LumiKernel](https://github.com/CofficLab/LumiKernel) — `KernelCore`
-- [LumiLocalization](https://github.com/CofficLab/LumiLocalization) — `LumiLocalizationKit` 运行时本地化
-- [LumiSettings](https://github.com/CofficLab/LumiSettings) — `ProviderSettingView`
-- [LumiUI](https://github.com/CofficLab/LumiUI) — 设置页组件
+- [LumiKernel](https://github.com/lumi-softworks/LumiKernel) — `KernelCore`
+- [LumiLocalization](https://github.com/lumi-softworks/LumiLocalization) — `LumiLocalizationKit` 运行时本地化
+- [LumiSettings](https://github.com/lumi-softworks/LumiSettings) — `ProviderSettingView`
+- [LumiUI](https://github.com/lumi-softworks/LumiUI) — 设置页组件
 
 ## 使用
 
