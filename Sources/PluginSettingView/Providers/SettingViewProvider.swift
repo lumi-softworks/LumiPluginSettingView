@@ -4,7 +4,7 @@ import ProviderSettingView
 import SwiftUI
 #if os(macOS)
 import AppKit
-#elseif os(iOS)
+#elseif os(iOS) || os(visionOS)
 import UIKit
 #endif
 
@@ -137,7 +137,7 @@ private struct CurrentAppIconView: View {
             .scaledToFit()
     }
 }
-#elseif os(iOS)
+#elseif os(iOS) || os(visionOS)
 private struct CurrentAppIconView: View {
     var body: some View {
         if let image = CurrentAppIcon.image {
@@ -185,7 +185,7 @@ private enum CurrentAppIcon {
 }
 #endif
 
-#if os(iOS)
+#if os(iOS) || os(visionOS)
 /// iOS 设置外壳：紧凑宽度使用分层导航，Regular 宽度使用双栏导航。
 ///
 /// 设置入口仍来自 `SettingViewProviding`，这里只负责 iOS 的呈现方式；
